@@ -12,8 +12,6 @@ def rc4(msg, key):
     for i in xrange(0, 256):
         S.append(i)
 
-    #testing purpose
-    #print S, '\n'
 
     j = 0
     for i in xrange(0, 256):
@@ -23,8 +21,6 @@ def rc4(msg, key):
         S[j] = S[i] ^ S[j]
         S[i] = S[i] ^ S[j]
 
-    #testing purpose 
-    #print S, '\n'
 
     i = 0
     j = 0
@@ -52,10 +48,6 @@ def encrypt():
         foo += chr(e)
     encoded = base64.b64encode(foo)
     print 'Cipher in base64 is',encoded
-    data = base64.b64decode(encoded)
-    bar = []
-    for e in data:
-        bar.append(ord(e))
 
 def decrypt():
     global M, msg, key
@@ -65,7 +57,6 @@ def decrypt():
     for e in data:
         bar.append(ord(e))
 
-    #print bar
 
     foo = []
     for e in bar:
@@ -92,7 +83,7 @@ def main(argv):
     msg = ''
     key = ''
     key_received = False
-    msg_received = True
+    msg_received = False 
 
     if len(argv) < 1:
         my_error()
