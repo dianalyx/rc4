@@ -91,6 +91,8 @@ def main(argv):
     M = []
     msg = ''
     key = ''
+    key_received = False
+    msg_received = True
 
     if len(argv) < 1:
         my_error()
@@ -112,14 +114,16 @@ def main(argv):
 
         elif opt in ("-m"):
             msg = arg
+            msg_received = True  #True
 
         elif opt in ("-k"):
             key = arg
+            key_received = True  #True
 
-    if mode == 0:
+    if mode == 0 and msg_received is True and key_received is True:
         encrypt()
 
-    elif mode == 1:
+    elif mode == 1 and msg_received is True and key_received is True:
         decrypt()
 
     else:
