@@ -1,6 +1,10 @@
 #!/usr/bin/python
-# PURPOSE : Implementing RC4
-# Author  : Tushar Sharma
+
+#Purpose : Implementing RC4
+
+__author__ = "Tushar Sharma"
+
+import sys, getopt, base64
 
 def rc4(msg, key):
     #Initialization
@@ -8,8 +12,8 @@ def rc4(msg, key):
     for i in xrange(0, 256):
         S.append(i)
 
-    #test
-    print S, '\n'
+    #testing purpose
+    #print S, '\n'
 
     j = 0
     for i in xrange(0, 256):
@@ -19,8 +23,8 @@ def rc4(msg, key):
         S[j] = S[i] ^ S[j]
         S[i] = S[i] ^ S[j]
 
-    #test 
-    print S, '\n'
+    #testing purpose 
+    #print S, '\n'
 
     i = 0
     j = 0
@@ -38,23 +42,88 @@ def rc4(msg, key):
         M.append(ord(msg[k]) ^ pr)
 
     return M
- 
 
-msg = raw_input('Enter plaintext > ')
-key = raw_input('Enter key between 1 and 256 bytes > ')
-M = []
+def encrypt():
+    global M, msg, key
 
-M = rc4(msg, key)
-print 'Cipher is ', M
+    M = rc4(msg, key)
+    foo = ''
+    for e in M:
+        foo += chr(e)
+    encoded = base64.b64encode(foo)
+    print 'Cipher in base64 is',encoded
+    data = base64.b64decode(encoded)
+    bar = []
+    for e in data:
+        bar.append(ord(e))
 
-foo = []
-for e in M:
-    foo.append(chr(e))
+def decrypt():
+    global M, msg, key
+    
+    data = base64.b64decode(msg)
+    bar = []
+    for e in data:
+        bar.append(ord(e))
 
-#print foo
+    #print bar
 
-M = rc4(foo, key)
+    foo = []
+    for e in bar:
+       foo.append(chr(e))
 
-print 'Message is'
-for e in M:
-    print chr(e),
+    M = rc4(foo, key)
+
+    tmp = ''
+    for e in M:
+        tmp += chr(e)
+    print 'Message is', tmp
+
+
+def my_error():
+    print 'Usage\nrc4.py -e -m <message> -k <key>   or \nrc4.py -d -m <message> -k <key>'
+    sys.exit(2)
+    
+def main(argv):
+
+    mode = 2  #arbitrarily value
+    global M, msg, key
+
+    M = []
+    msg = ''
+    key = ''
+
+    if len(argv) < 1:
+        my_error()
+
+    try:
+        opts, args = getopt.getopt(argv,"hedm:k:")
+    except getopt.GetoptError:
+        my_error()
+
+    for opt, arg in opts:
+        if opt == '-h':
+            my_error()
+
+        elif opt in ("-e"):
+            mode = 0
+
+        elif opt in ("-d"):
+            mode = 1
+
+        elif opt in ("-m"):
+            msg = arg
+
+        elif opt in ("-k"):
+            key = arg
+
+    if mode == 0:
+        encrypt()
+
+    elif mode == 1:
+        decrypt()
+
+    else:
+        my_error()
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
